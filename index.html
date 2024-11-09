@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfiles</title>
     <style>
-        /* Fondo de toda la página en blanco */
         body {
             margin: 0;
             background-color: #f5f6fa;
             font-family: Arial, sans-serif;
         }
 
-        /* Estilo del encabezado */
         .encabezado {
             background-color: #4a90e2;
             color: white;
@@ -22,7 +20,6 @@
             font-weight: bold;
         }
 
-        /* Contenedor general */
         .container {
             padding: 20px;
             display: flex;
@@ -30,7 +27,6 @@
             align-items: center;
         }
 
-        /* Botón principal */
         .main-button {
             background-color: #4a90e2;
             color: white;
@@ -40,20 +36,19 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-bottom: 20px;
         }
 
         .main-button:hover {
             background-color: #357ABD;
         }
 
-        /* Sección de perfiles creados */
         .perfiles-creados {
             margin-top: 20px;
             width: 100%;
             max-width: 800px;
         }
 
-        /* Botón de desplegar lista */
         .toggle-button {
             cursor: pointer;
             background-color: transparent;
@@ -68,19 +63,16 @@
             font-weight: bold;
         }
 
-        /* Flecha hacia abajo */
         .toggle-button .arrow {
             display: inline-block;
             margin-left: 8px;
             transition: transform 0.3s;
         }
 
-        /* Girar flecha cuando lista esté desplegada */
         .toggle-button.active .arrow {
             transform: rotate(90deg);
         }
 
-        /* Lista de perfiles */
         .perfiles-lista {
             display: none;
             margin-top: 10px;
@@ -91,7 +83,6 @@
             justify-items: center;
         }
 
-        /* Tarjeta de perfil */
         .perfil-card {
             background-color: white;
             border: 1px solid #e0e0e0;
@@ -109,11 +100,13 @@
             border: 2px solid #4a90e2;
             border-radius: 50%;
             margin: 10px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: grey;
+            overflow: hidden;
+        }
+
+        .perfil-card .foto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .perfil-card .info p {
@@ -136,7 +129,6 @@
             background-color: #357ABD;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -158,13 +150,25 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .modal-content input, .modal-content select {
+        .modal-content label {
+            font-size: 14px;
+            color: #333;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .modal-content input[type="text"], .modal-content input[type="time"], .modal-content select {
             width: 100%;
-            padding: 10px;
-            margin: 8px 0;
+            padding: 5px;
+            margin: 5px 0 15px;
             border-radius: 5px;
             border: 1px solid #ddd;
-            font-size: 16px;
+            font-size: 14px;
+        }
+
+        .modal-content input[type="time"], .modal-content select {
+            width: 50%;
         }
 
         .modal-buttons {
@@ -191,20 +195,31 @@
             background-color: #dc3545;
             color: white;
         }
+
+        .foto-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .foto-preview img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #4a90e2;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Encabezado -->
-    <div class="encabezado">
-        Creación de Perfiles :)
-    </div>
+    <div class="encabezado">Creación de Perfiles :)</div>
 
-    <!-- Contenedor principal -->
     <div class="container">
         <button class="main-button" onclick="abrirModal()">Crear Perfil</button>
 
-        <!-- Sección de perfiles creados -->
         <div class="perfiles-creados">
             <button class="toggle-button" id="toggleButton">
                 Perfiles creados
@@ -214,35 +229,49 @@
         </div>
     </div>
 
-    <!-- Modal para crear perfil -->
+    <!-- Modal para crear o modificar perfil -->
     <div class="modal" id="modalCrearPerfil">
         <div class="modal-content">
-            <h2>Crear Nuevo Perfil</h2>
-            <input type="text" id="nombreInput" placeholder="Nombre" required>
-            
-            <!-- Selección de horas de ingreso y salida -->
-            <div style="display: flex; gap: 10px;">
-                <div style="flex: 1;">
-                    <label for="horaIngresoInput">Hora de Ingreso:</label>
-                    <input type="time" id="horaIngresoInput" required>
-                </div>
-                <div style="flex: 1;">
-                    <label for="horaSalidaInput">Hora de Salida:</label>
-                    <input type="time" id="horaSalidaInput" required>
-                </div>
-            </div>
+            <h2 id="modalTitle">Crear Nuevo Perfil</h2>
 
+            <label for="nombreInput">Nombre</label>
+            <input type="text" id="nombreInput" placeholder="Nombre" required>
+
+            <label for="horaIngresoInput">Hora de Ingreso</label>
+            <input type="time" id="horaIngresoInput" required>
+
+            <label for="horaSalidaInput">Hora de Salida</label>
+            <input type="time" id="horaSalidaInput" required>
+
+            <label for="rolInput">Seleccionar Rol</label>
             <select id="rolInput" required>
                 <option value="">Seleccionar Rol</option>
                 <option value="Empleado">Empleado</option>
                 <option value="Administrador">Administrador</option>
                 <option value="Usuario">Usuario</option>
             </select>
-            <input type="file" id="imagenInput" placeholder="Subir Imagen">
+
+            <label for="imagenInput">Subir una foto de perfil</label>
+            <input type="file" id="imagenInput" accept="image/*" onchange="previewImage(event)">
+            
+            <div class="foto-preview">
+                <img src="" alt="Vista previa de imagen" id="previewImg">
+            </div>
 
             <div class="modal-buttons">
-                <button class="modal-button create" onclick="crearPerfilDesdeModal()">Crear</button>
+                <button class="modal-button create" onclick="guardarPerfil()">Guardar</button>
                 <button class="modal-button cancel" onclick="cerrarModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación de eliminación -->
+    <div class="modal" id="modalEliminarPerfil">
+        <div class="modal-content">
+            <h2>¿Estás seguro de eliminar este perfil?</h2>
+            <div class="modal-buttons">
+                <button class="modal-button create" onclick="confirmarEliminar()">Sí</button>
+                <button class="modal-button cancel" onclick="cerrarModalEliminar()">No</button>
             </div>
         </div>
     </div>
@@ -251,48 +280,89 @@
         const toggleButton = document.getElementById('toggleButton');
         const perfilesLista = document.getElementById('perfilesLista');
         const modalCrearPerfil = document.getElementById('modalCrearPerfil');
+        const modalEliminarPerfil = document.getElementById('modalEliminarPerfil');
+        let perfilParaEliminar = null;
+        let perfilParaModificar = null;
 
         toggleButton.addEventListener('click', function() {
-            perfilesLista.style.display = perfilesLista.style.display === 'none' || perfilesLista.style.display === '' ? 'grid' : 'none';
+            perfilesLista.style.display = perfilesLista.style.display === 'grid' ? 'none' : 'grid';
             toggleButton.classList.toggle('active');
         });
 
-        function abrirModal() {
+        function abrirModal(isEditing = false) {
+            document.getElementById('modalTitle').innerText = isEditing ? 'Modificar Perfil' : 'Crear Nuevo Perfil';
+            limpiarCamposModal();
+            perfilParaModificar = isEditing ? perfilParaModificar : null;
             modalCrearPerfil.style.display = 'flex';
         }
 
         function cerrarModal() {
             modalCrearPerfil.style.display = 'none';
-            limpiarCamposModal();
+        }
+
+        function abrirModalEliminar(perfil) {
+            perfilParaEliminar = perfil;
+            modalEliminarPerfil.style.display = 'flex';
+        }
+
+        function cerrarModalEliminar() {
+            modalEliminarPerfil.style.display = 'none';
+        }
+
+        function confirmarEliminar() {
+            perfilParaEliminar.remove();
+            cerrarModalEliminar();
         }
 
         function limpiarCamposModal() {
-            document.getElementById('nombreInput').value = '';
-            document.getElementById('horaIngresoInput').value = '';
-            document.getElementById('horaSalidaInput').value = '';
-            document.getElementById('rolInput').value = '';
+            document.getElementById('nombreInput').value = perfilParaModificar ? perfilParaModificar.querySelector('.info p').innerText : '';
+            document.getElementById('horaIngresoInput').value = perfilParaModificar ? perfilParaModificar.querySelector('.info p:nth-child(2)').innerText.split(': ')[1] : '';
+            document.getElementById('horaSalidaInput').value = perfilParaModificar ? perfilParaModificar.querySelector('.info p:nth-child(3)').innerText.split(': ')[1] : '';
+            document.getElementById('rolInput').value = perfilParaModificar ? perfilParaModificar.querySelector('.info p:nth-child(4)').innerText.split(': ')[1] : '';
             document.getElementById('imagenInput').value = '';
+            document.getElementById('previewImg').src = perfilParaModificar ? perfilParaModificar.querySelector('img').src : '';
+            document.getElementById('previewImg').style.display = perfilParaModificar ? 'block' : 'none';
         }
 
-        function crearPerfilDesdeModal() {
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImg = document.getElementById('previewImg');
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function guardarPerfil() {
             const nombre = document.getElementById('nombreInput').value;
             const horaIngreso = document.getElementById('horaIngresoInput').value;
             const horaSalida = document.getElementById('horaSalidaInput').value;
             const rol = document.getElementById('rolInput').value;
+            const previewImg = document.getElementById('previewImg').src;
 
-            if (nombre && horaIngreso && horaSalida && rol) {
-                crearPerfil(nombre, horaIngreso, horaSalida, rol);
+            if (nombre && horaIngreso && horaSalida && rol && previewImg) {
+                if (perfilParaModificar) {
+                    actualizarPerfil(nombre, horaIngreso, horaSalida, rol, previewImg);
+                } else {
+                    crearPerfil(nombre, horaIngreso, horaSalida, rol, previewImg);
+                }
                 cerrarModal();
             } else {
                 alert('Por favor, complete todos los campos.');
             }
         }
 
-        function crearPerfil(nombre, horaIngreso, horaSalida, rol) {
+        function crearPerfil(nombre, horaIngreso, horaSalida, rol, imagenSrc) {
             const perfil = document.createElement('li');
             perfil.classList.add('perfil-card');
             perfil.innerHTML = `
-                <div class="foto">FOTO</div>
+                <div class="foto">
+                    <img src="${imagenSrc}" alt="${nombre}">
+                </div>
                 <div class="info">
                     <p><strong>${nombre}</strong></p>
                     <p>Ingreso: ${horaIngreso}</p>
@@ -300,21 +370,25 @@
                     <p>Rol: ${rol}</p>
                 </div>
                 <button class="button" onclick="modificarPerfil(this)">Modificar</button>
-                <button class="button" onclick="eliminarPerfil(this)">Eliminar</button>
+                <button class="button" onclick="abrirModalEliminar(this.parentElement)">Eliminar</button>
             `;
             perfilesLista.appendChild(perfil);
         }
 
         function modificarPerfil(button) {
-            const perfil = button.parentElement;
-            alert("Modificando perfil: " + perfil.querySelector('.info p').innerText);
+            perfilParaModificar = button.parentElement;
+            abrirModal(true);
         }
 
-        function eliminarPerfil(button) {
-            const perfil = button.parentElement;
-            perfil.remove();
-            alert("Perfil eliminado");
+        function actualizarPerfil(nombre, horaIngreso, horaSalida, rol, imagenSrc) {
+            perfilParaModificar.querySelector('.info p strong').innerText = nombre;
+            perfilParaModificar.querySelector('.info p:nth-child(2)').innerText = `Ingreso: ${horaIngreso}`;
+            perfilParaModificar.querySelector('.info p:nth-child(3)').innerText = `Salida: ${horaSalida}`;
+            perfilParaModificar.querySelector('.info p:nth-child(4)').innerText = `Rol: ${rol}`;
+            perfilParaModificar.querySelector('img').src = imagenSrc;
+            perfilParaModificar = null;
         }
     </script>
 </body>
 </html>
+
